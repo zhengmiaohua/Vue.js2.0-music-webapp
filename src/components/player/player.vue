@@ -84,15 +84,16 @@
           <p class="desc" v-html="currentSong.singer"></p>
         </div>
         <div class="control">
-          
-        </div>
-        <div class="control">
           <progress-circle :radius="radius" :percent="percent">
             <i class="icon-mini" :class="miniIcon" @click.stop.prevent="togglePlaying"></i>
           </progress-circle>
         </div>
+        <div class="control" @click="showPlaylist">
+          <i class="icon-playlist"></i>
+        </div>
       </div>
     </transition>
+    <playlist ref="playlist"></playlist>
     <audio ref="audio" :src="currentSong.url" 
           @canplay="ready"
           @error="error"
@@ -112,6 +113,7 @@
   import {shuffle} from 'common/js/util'
   import Lyric from 'lyric-parser'
   import Scroll from 'base/scroll/scroll'
+  import Playlist from 'components/playlist/playlist'
 
   const transform=prefixStyle('transform')
   const transitionDuration = prefixStyle('transitionDuration')
@@ -133,7 +135,8 @@
     components:{
       ProgressBar,
       ProgressCircle,
-      Scroll
+      Scroll,
+      Playlist
     },
     computed:{
       iconMode() {
@@ -165,6 +168,9 @@
       ])
     },
     methods:{
+      showPlaylist() {
+        this.$refs.playlist.show()
+      },
       middleTouchStart(e) {
         this.touch.initiaed=true
         const touch = e.touches[0]
