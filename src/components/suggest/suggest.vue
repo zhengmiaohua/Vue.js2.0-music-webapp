@@ -139,6 +139,9 @@
         })
         return ret
       },
+      refresh() {
+        this.$refs.suggest.refresh()
+      },
       ...mapMutations({
         setSinger: 'SET_SINGER'
       }),
