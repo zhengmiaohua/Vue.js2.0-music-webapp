@@ -9,18 +9,22 @@
             <span class="clear"><i class="icon-clear"></i></span>
           </h1>
         </div>
-        <div>
-            <li class="item">
-              <i class="current"></i>
-              <span class="text"></span>
+        <scroll :data="sequenceList" class="list-content" ref="listContent">
+          <ul>
+            <li class="item" v-for="(item,index) in sequenceList" 
+                @click="selectItem(item,index)"
+                ref="listItem">
+              <i class="current" :class="getCurrentIcon(item)"></i>
+              <span class="text">{{item.name}}</span>
               <span class="like">
-                <i></i>
+                <i class="icon-not-favorite"></i>
               </span>
               <span class="delete">
                 <i class="icon-delete"></i>
               </span>
             </li>
-        </div>
+          </ul>
+        </scroll>
         <div class="list-operate">
           <div class="add">
             <i class="icon-add"></i>
@@ -37,18 +41,69 @@
 </template>
 
 <script type="text/ecmascript-6">
+import {mapGetters,mapMutations} from 'vuex'
+import Scroll from 'base/scroll/scroll'
+import {playMode} from 'common/js/config'
   export default{
+    components:{
+      Scroll
+    },
     data() {
       return {
         showFlag:false
       }
     },
+    computed:{
+      ...mapGetters([
+        'sequenceList',
+        'currentSong',
+        'playlist'
+      ])
+    },
     methods:{
       show() {
         this.showFlag=true
+        setTimeout(()=>{
+          this.$refs.listContent.refresh()
+          this.scrollToCurrent(this.currentSong)
+        })
       },
       hide() {
         this.showFlag=false
+      },
+      getCurrentIcon(item) {
+        if(this.currentSong.id===item.id){
+          return 'icon-play'
+        }
+        return ''
+      },
+      selectItem(item,index) {
+        if(this.mode===playMode.random) {
+          index=this.playlistfindIndex((song)=>{
+            return song.id===item.id
+          })
+          this.$refs.listContent.scrollToElement
+        }
+        this.setCurrentIndex(index)
+        this.setPlayingState(true)
+      },
+      scrollToCurrent(current) {
+        const index=this.sequenceList.findIndex((song)=>{
+          return current.id===song.id
+        })
+        this.$refs.listContent.scrollToElement(this.$refs.listItem[index],300)
+      },
+      ...mapMutations({
+        'setCurrentIndex':'SET_CURRENT_INDEX',
+        'setPlayingState':'SET_PLAYING_STATE'
+      })
+    },
+    watch:{
+      currentSong(newSong,oldSong){
+        if(!this.showFlag || newSong.id===oldSong.id){
+          return
+        }
+        this.scrollToCurrent(newSong)
       }
     }
   }
