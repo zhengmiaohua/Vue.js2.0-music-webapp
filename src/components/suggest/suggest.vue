@@ -104,6 +104,7 @@
         }else{
           this.insertSong(item)
         }
+        this.$emit('select')
       },
       _genResult(data) {
         let ret = []
