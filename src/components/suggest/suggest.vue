@@ -3,6 +3,8 @@
            :data="result" 
            :pullup="pullup"
            @scrollToEnd="searchMore"
+           @beforeScroll="listScroll"
+           :beforeScroll="beforeScroll"
            ref="suggest">
     <ul class="suggest-list">
       <li class="suggest-item" v-for="item in result" @click="selectItem(item)">
@@ -52,10 +54,14 @@
         page:1,
         result:[],
         pullup:true,
-        hasMore:true
+        hasMore:true,
+        beforeScroll:true
       }
     },
     methods:{
+      listScroll() {
+        this.$emit('listScroll')
+      },
       search() {
         this.page=1
         this.hasMore=true
