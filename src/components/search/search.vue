@@ -46,9 +46,9 @@
   import SearchList from 'base/search-list/search-list'
   import Confirm from 'base/confirm/confirm'
   import Scroll from 'base/scroll/scroll'
-  import {playlistMixin} from 'common/js/mixin'
+  import {playlistMixin,searchMixin} from 'common/js/mixin'
   export default {
-    mixins:[playlistMixin],
+    mixins:[playlistMixin,searchMixin],
   	components:{
   		SearchBox,
   		Suggest,
@@ -62,7 +62,6 @@
   	data() {
   		return {
   			hotKey:[],
-  			query:''
 		  }
   	},
     computed:{
@@ -96,15 +95,8 @@
   		addQuery(item) {
   			this.$refs.searchBox.setQuery(item)
   		},
-  		onQueryChange(query){
-  			this.query=query
-  		},
-      blurInput(){
-        this.$refs.searchBox.blur()
-      },
-      saveSearch() {
-        this.saveSearchHistory(this.query)
-      },
+  		
+      
       deleteOne(item) {
         this.deleteSearchHistory(item)
       },
