@@ -115,3 +115,4 @@ export const deleteSongList=function({commit}){
   commit(types.SET_CURRENT_INDEX, -1)
   commit(types.SET_PLAYING_STATE,false)
 }
+
